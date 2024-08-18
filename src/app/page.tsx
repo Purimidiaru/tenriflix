@@ -29,18 +29,22 @@ export default function Home() {
     lines.forEach(line => {
       if (line.startsWith('#EXTINF:')) {
         const name = line.match(/,([^,]+)$/)?.[1]?.trim();
-        channel = {
-          name,
-          image: `${name.toLowerCase().replace(/\s+/g, '-')}.png`,
-        };
+        if (name) {
+          channel = {
+            name,
+            image: `${name.toLowerCase().replace(/\s+/g, '-')}.png`,
+          };
+        }
       } else if (line.startsWith('http')) {
-        channel.url = line;
-        channels.push(channel);
+        if (channel.name) {
+          channel.url = line;
+          channels.push(channel);
+        }
       }
     });
   
     return channels;
-  };  
+  };
 
   const scrollLeft = () => {
     if (scrollRef.current) {
