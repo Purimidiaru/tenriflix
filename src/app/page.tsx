@@ -61,22 +61,24 @@ export default function Home() {
   };
 
   const playChannel = (url: string, fallbackUrl?: string) => {
-    if (playerRef.current) {
-      playerRef.current.src({ src: url, type: 'application/x-mpegURL' });
-      playerRef.current.play().catch((error: any) => {
-        console.error('Primary stream failed, trying backup', error);
-        if (fallbackUrl) {
-          playerRef.current.src({ src: fallbackUrl, type: 'application/x-mpegURL' });
-          playerRef.current.play();
-        }
-      });
-    } else {
-      playerRef.current = videojs(videoRef.current, {
-        controls: true,
-        autoplay: true,
-        preload: 'auto',
-        sources: [{ src: url, type: 'application/x-mpegURL' }],
-      });
+    if (videoRef.current) {
+      if (playerRef.current) {
+        playerRef.current.src({ src: url, type: 'application/x-mpegURL' });
+        playerRef.current.play().catch((error: any) => {
+          console.error('Primary stream failed, trying backup', error);
+          if (fallbackUrl) {
+            playerRef.current.src({ src: fallbackUrl, type: 'application/x-mpegURL' });
+            playerRef.current.play();
+          }
+        });
+      } else {
+        playerRef.current = videojs(videoRef.current, {
+          controls: true,
+          autoplay: true,
+          preload: 'auto',
+          sources: [{ src: url, type: 'application/x-mpegURL' }],
+        });
+      }
     }
   };
 
