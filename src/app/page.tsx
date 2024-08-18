@@ -32,22 +32,28 @@ export default function Home() {
     let channel: any = {};
 
     lines.forEach(line => {
-      if (line.startsWith('#EXTINF:')) {
-        let name = line.match(/,([^,]+)$/)?.[1];
-        name = name?.trim().toLowerCase().replace(/\s+/g, '-');
-        name = name?.endsWith('-') ? name.slice(0, -1) : name;
-        channel = {
-          name,
-          image: `${name}.png`,
-        };
-      } else if (line.startsWith('http')) {
-        channel.url = line;
-        channels.push(channel);
-      }
+        if (line.startsWith('#EXTINF:')) {
+            let name = line.match(/,([^,]+)$/)?.[1];
+            name = name?.trim().toLowerCase().replace(/\s+/g, '-');
+            name = name?.endsWith('-') ? name.slice(0, -1) : name;
+            channel = {
+                name,
+                image: `${name}.png`,
+            };
+        } else if (line.startsWith('http')) {
+            channel.url = line;
+            channels.push(channel);
+        }
+    });
+
+    // Modifier les noms des chaînes après avoir rempli les informations
+    channels.forEach(channel => {
+        channel.name = channel.name.replace(/-/g, ' ').toUpperCase();
     });
 
     return channels;
-  };
+};
+
 
   const handleChannelSelection = (channel: any) => {
     const backupChannel = backupChannels.find((ch) => ch.name === channel.name);
