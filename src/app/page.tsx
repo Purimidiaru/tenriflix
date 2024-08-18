@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
 import { useEffect, useState, useRef } from 'react';
-import { Box, VStack, Heading } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import Navbar from './components/Navbar';
 import ChannelRow from './components/ChannelRow';
 import VideoPlayer from './components/VideoPlayer';
@@ -15,7 +15,7 @@ export default function Home() {
   useEffect(() => {
     Promise.all([
       fetch('/jp-primary.m3u').then(response => response.text()),
-      fetch('/jp.m3u').then(response => response.text())
+      fetch('/jp-backup.m3u').then(response => response.text())
     ])
     .then(([primaryData, backupData]) => {
       const parsedPrimaryChannels = parseM3U(primaryData);
@@ -33,8 +33,12 @@ export default function Home() {
 
     lines.forEach(line => {
       if (line.startsWith('#EXTINF:')) {
+        let name = line.match(/,([^,]+)$/)?.[1];
+        name = name?.trim().toLowerCase().replace(/\s+/g, '-');
+        name = name?.endsWith('-') ? name.slice(0, -1) : name;
         channel = {
-          name: line.match(/,([^,]+)$/)?.[1],
+          name,
+          image: `${name}.png`,
         };
       } else if (line.startsWith('http')) {
         channel.url = line;
@@ -68,27 +72,20 @@ export default function Home() {
   return (
     <Box bg="black" color="white" minHeight="100vh" overflow="hidden">
       <Navbar />
-      <Box height="60vh" bg="black" position="relative" mt="10vh">
-        <Box position="absolute" bottom={10} left={0} zIndex={10} px={4} width="100%">
-          <Heading
-            as="h2"
-            size="2xl"
-            mb={3}
-            textAlign="left"
-            maxWidth="100%"
-            whiteSpace="nowrap"
-            overflow="hidden"
-            textOverflow="ellipsis"
-          >
-            {selectedChannel ? selectedChannel.name : '読み込み中'}
-          </Heading>
-        </Box>
-        {selectedChannel && (
-          <VideoPlayer url={selectedChannel.url} backupUrl={selectedChannel.backupUrl} />
-        )}
-      </Box>
+
+      {selectedChannel && (
+        <VideoPlayer selectedChannel={selectedChannel} />
+      )}
+
       <VStack spacing={10} mt="5vh" p={5}>
-        <ChannelRow title="テレビチャンネル" channels={primaryChannels} onSelectChannel={handleChannelSelection} scrollRef={scrollRef} scrollLeft={scrollLeft} scrollRight={scrollRight} />
+        <ChannelRow 
+          title="テレビチャンネル" 
+          channels={primaryChannels} 
+          onSelectChannel={handleChannelSelection} 
+          scrollRef={scrollRef} 
+          scrollLeft={scrollLeft} 
+          scrollRight={scrollRight} 
+        />
       </VStack>
     </Box>
   );
