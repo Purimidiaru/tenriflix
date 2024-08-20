@@ -1,13 +1,3 @@
-#EXTM3U url-tvg="https://epg.djtmewibu.com/jcom.xml,https://animenosekai.github.io/japanterebi-xmltv/guide.xml" tvg-shift=0 m3uautoload=1
-
-
-#EXTINF:-1 group-title="Information" ,We need donations to maintain the host!
-https://google.com
-#EXTINF:-1 group-title="Information" ,Donate: https://ko-fi.com/dinhluong
-http://google.com
-#EXTINF:-1 group-title="Information" ,Test channels are not stable! Report them in Issue if faced any error.
-http://google.com
-
 #Tokyo1
 #EXTINF:-1 group-title="Tokyo" tvg-id="nhkg_tokyo" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/6/6f/NHK%E7%B7%8F%E5%90%88%E3%83%AD%E3%82%B42020-.png",NHK G 
 https://vnpt.nekocdn.xyz/b783a989-9e73-4bce-bfa3-9996a9eaa455.m3u8
